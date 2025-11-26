@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ProfileContext } from "../context/ProfileContext";
-
+import ReactMarkdown from "react-markdown";
 export default function RoastCard() {
   const { roastText } = useContext(ProfileContext);
   const [animatedText, setAnimatedText] = useState("");
@@ -16,7 +16,7 @@ export default function RoastCard() {
       i++;
 
       if (i >= roastText.length) clearInterval(interval);
-    }, 30);
+    }, 15);
 
     return () => clearInterval(interval);
   }, [roastText]);
@@ -30,7 +30,7 @@ export default function RoastCard() {
 
       <div className="mt-4 w-[700px] mb-20 max-w-full bg-white text-black border-4 border-black rounded-2xl p-6 shadow-[3.5px_3.5px_0px_rgba(0,0,0,1)]">
         <div className="text-base leading-relaxed whitespace-pre-wrap">
-          {animatedText}
+          <ReactMarkdown>{animatedText}</ReactMarkdown>
         </div>
       </div>
     </>

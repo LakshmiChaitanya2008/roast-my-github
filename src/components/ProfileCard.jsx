@@ -11,6 +11,7 @@ export default function ProfileCard() {
     setRoastText,
     loading,
     setLoading,
+    roastText,
   } = useContext(ProfileContext);
 
   const handleConfirm = async function (e) {
@@ -88,35 +89,39 @@ export default function ProfileCard() {
             </p>
           </div>
         </div>
-        <div className="flex gap-5">
-          <button
-            onClick={handleConfirm}
-            disabled={loading}
-            className={`bg-black px-6 py-3 font-bold mt-4 rounded-lg cursor-pointer
+        {!roastText ? (
+          <div className="flex gap-5">
+            <button
+              onClick={handleConfirm}
+              disabled={loading}
+              className={`bg-black px-6 py-3 font-bold mt-4 rounded-lg cursor-pointer
     ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
-          >
-            {loading ? (
-              <div className="flex items-center gap-2">
-                <span className="loader w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                Roasting...
-              </div>
-            ) : (
-              "Confirm?"
-            )}
-          </button>
-          <button
-            onClick={() => {
-              setProfileData(null);
-              setRepoData(null);
-              setRoastText("");
-            }}
-            disabled={loading}
-            className={`bg-black px-6 py-3 font-bold mt-4 rounded-lg cursor-pointer
+            >
+              {loading ? (
+                <div className="flex items-center gap-2">
+                  <span className="loader w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  Roasting...
+                </div>
+              ) : (
+                "Confirm?"
+              )}
+            </button>
+            <button
+              onClick={() => {
+                setProfileData(null);
+                setRepoData(null);
+                setRoastText("");
+              }}
+              disabled={loading}
+              className={`bg-black px-6 py-3 font-bold mt-4 rounded-lg cursor-pointer
     ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
-          >
-            Cancel
-          </button>
-        </div>
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          ""
+        )}
       </>
     );
   }
