@@ -1,0 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+@import "tailwindcss";
+
+body {
+  font-family: "work sans";
+  background-color: #f76343;
+  color: #ffffff;
+}
+
+h1 {
+  font-weight: 800;
+}
+
+p {
+  font-weight: 500;
+  font-size: 20px;
+}
