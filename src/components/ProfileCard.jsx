@@ -3,26 +3,38 @@ import { ProfileContext } from "../context/ProfileContext";
 import { roastUser } from "./utils/ai";
 
 export default function ProfileCard() {
-  const { profileData, setProfileData, setRepoData, repoData, setRoastText } =
-    useContext(ProfileContext);
+  const {
+    profileData,
+    setProfileData,
+    setRepoData,
+    repoData,
+    setRoastText,
+    loading,
+    setLoading,
+  } = useContext(ProfileContext);
 
   const handleConfirm = async function (e) {
     if (profileData.login) {
-      const req = await fetch(
-        `https://api.github.com/users/${profileData.login}/repos`
-      );
+      setLoading(true);
+      try {
+        const req = await fetch(
+          `https://api.github.com/users/${profileData.login}/repos`
+        );
 
-      const data = await req.json();
-      const reducedRepos = data.map((r) => ({
-        name: r.name,
-        description: r.description || "No description provided",
-        language: r.language,
-      }));
-      setRepoData(reducedRepos);
+        const data = await req.json();
+        const reducedRepos = data.map((r) => ({
+          name: r.name,
+          description: r.description || "No description provided",
+          language: r.language,
+        }));
+        setRepoData(reducedRepos);
 
-      const roastText = await roastUser(profileData, reducedRepos);
+        const roastText = await roastUser(profileData, reducedRepos);
 
-      setRoastText(roastText);
+        setRoastText(roastText);
+      } finally {
+        setLoading(false);
+      }
     }
   };
   if (profileData === "Not Found") {
@@ -79,13 +91,28 @@ export default function ProfileCard() {
         <div className="flex gap-5">
           <button
             onClick={handleConfirm}
-            className="bg-black px-6 py-3 font-bold mt-4 cursor-pointer rounded-lg"
+            disabled={loading}
+            className={`bg-black px-6 py-3 font-bold mt-4 rounded-lg cursor-pointer
+    ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
           >
-            Confirm?
+            {loading ? (
+              <div className="flex items-center gap-2">
+                <span className="loader w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                Roasting...
+              </div>
+            ) : (
+              "Confirm?"
+            )}
           </button>
           <button
-            onClick={() => setProfileData(null)}
-            className="bg-black  px-6 py-3 mt-4 font-bold cursor-pointer rounded-lg"
+            onClick={() => {
+              setProfileData(null);
+              setRepoData(null);
+              setRoastText("");
+            }}
+            disabled={loading}
+            className={`bg-black px-6 py-3 font-bold mt-4 rounded-lg cursor-pointer
+    ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             Cancel
           </button>
