@@ -1,0 +1,69 @@
+import React, { useContext } from "react";
+import { ProfileContext } from "../context/ProfileContext";
+
+export default function ProfileCard() {
+  const { profileData, setProfileData } = useContext(ProfileContext);
+
+  if (profileData === "Not Found") {
+    return (
+      <div className="mt-10 text-black w-[700px] max-w-full bg-white border-4 border-black rounded-2xl p-6 shadow-[3.5px_3.5px_0px_rgba(0,0,0,1)]">
+        <h2 className="text-2xl font-extrabold text-red-600">
+          User Not Found!
+        </h2>
+        <p className="mt-2 text-base">Please try again.</p>
+      </div>
+    );
+  } else {
+    return (
+      <>
+        <div className="mt-10 text-black w-[700px] max-w-full bg-white border-4 border-black rounded-2xl p-6 shadow-[3.5px_3.5px_0px_rgba(0,0,0,1)] flex gap-6 items-stretch">
+          <div className="shrink-0">
+            <img
+              src={profileData.avatar_url}
+              alt="profile"
+              className="h-full max-h-[140px] w-auto rounded-xl border-4 border-black object-cover"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <h2 className="text-2xl font-extrabold">{profileData.login}</h2>
+
+            <p className="text-base -mt-1">
+              <span className="font-semibold">Bio:</span>{" "}
+              {profileData.bio || "No bio available."}
+            </p>
+
+            <div className="flex gap-6 text-base font-semibold -mt-1">
+              <p>
+                Followers:{" "}
+                <span className="font-bold">{profileData.followers}</span>
+              </p>
+              <p>
+                Following:{" "}
+                <span className="font-bold">{profileData.following}</span>
+              </p>
+              <p>
+                Repos:{" "}
+                <span className="font-bold">{profileData.public_repos}</span>
+              </p>
+            </div>
+
+            <p className="text-sm -mt-1 text-gray-700">
+              Location: {profileData.location || "Unknown"}
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-5">
+          <button className="bg-black px-6 py-3 font-bold mt-4 cursor-pointer rounded-lg">
+            Confirm?
+          </button>
+          <button
+            onClick={() => setProfileData(null)}
+            className="bg-black  px-6 py-3 mt-4 font-bold cursor-pointer rounded-lg"
+          >
+            Cancel
+          </button>
+        </div>
+      </>
+    );
+  }
+}
