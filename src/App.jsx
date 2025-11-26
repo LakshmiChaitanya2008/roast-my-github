@@ -6,7 +6,7 @@ import RoastCard from "./components/RoastCard";
 import { ProfileContext } from "./context/ProfileContext";
 
 export default function App() {
-  const { profileData } = useContext(ProfileContext);
+  const { profileData, roastText } = useContext(ProfileContext);
   return (
     <div className="flex flex-col items-center mt-10">
       <Header />
@@ -18,8 +18,7 @@ export default function App() {
       ) : (
         ""
       )}
-
-      {/* <RoastCard /> */}
+      {roastText ? <RoastCard /> : ""}
     </div>
   );
 }

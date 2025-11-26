@@ -1,9 +1,30 @@
 import React, { useContext } from "react";
 import { ProfileContext } from "../context/ProfileContext";
+import { roastUser } from "./utils/ai";
 
 export default function ProfileCard() {
-  const { profileData, setProfileData } = useContext(ProfileContext);
+  const { profileData, setProfileData, setRepoData, repoData, setRoastText } =
+    useContext(ProfileContext);
 
+  const handleConfirm = async function (e) {
+    if (profileData.login) {
+      const req = await fetch(
+        `https://api.github.com/users/${profileData.login}/repos`
+      );
+
+      const data = await req.json();
+      const reducedRepos = data.map((r) => ({
+        name: r.name,
+        description: r.description || "No description provided",
+        language: r.language,
+      }));
+      setRepoData(reducedRepos);
+
+      const roastText = await roastUser(profileData, reducedRepos);
+
+      setRoastText(roastText);
+    }
+  };
   if (profileData === "Not Found") {
     return (
       <div className="mt-10 text-black w-[700px] max-w-full bg-white border-4 border-black rounded-2xl p-6 shadow-[3.5px_3.5px_0px_rgba(0,0,0,1)]">
@@ -27,12 +48,12 @@ export default function ProfileCard() {
           <div className="flex flex-col gap-2">
             <h2 className="text-2xl font-extrabold">{profileData.login}</h2>
 
-            <p className="text-base -mt-1">
-              <span className="font-semibold">Bio:</span>{" "}
+            <p className=" -mt-1">
+              <span className="font-bold">Bio:</span>{" "}
               {profileData.bio || "No bio available."}
             </p>
 
-            <div className="flex gap-6 text-base font-semibold -mt-1">
+            <div className="flex gap-6 font-semibold -mt-1">
               <p>
                 Followers:{" "}
                 <span className="font-bold">{profileData.followers}</span>
@@ -47,13 +68,19 @@ export default function ProfileCard() {
               </p>
             </div>
 
-            <p className="text-sm -mt-1 text-gray-700">
-              Location: {profileData.location || "Unknown"}
+            <p className="text-sm -mt-1 ">
+              Location:{" "}
+              <span className="font-bold">
+                {profileData.location || "Unknown"}
+              </span>
             </p>
           </div>
         </div>
         <div className="flex gap-5">
-          <button className="bg-black px-6 py-3 font-bold mt-4 cursor-pointer rounded-lg">
+          <button
+            onClick={handleConfirm}
+            className="bg-black px-6 py-3 font-bold mt-4 cursor-pointer rounded-lg"
+          >
             Confirm?
           </button>
           <button
