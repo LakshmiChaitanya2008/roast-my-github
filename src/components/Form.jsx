@@ -2,8 +2,9 @@ import React, { useContext } from "react";
 import { ProfileContext } from "../context/ProfileContext";
 
 export default function Form() {
-  const { setProfileData } = useContext(ProfileContext);
+  const { setProfileData, setRoastText } = useContext(ProfileContext);
   const handleSubmit = async function (formdata) {
+    setRoastText("");
     const { username } = Object.fromEntries(formdata);
 
     const req = await fetch(`https://api.github.com/users/${username}`);

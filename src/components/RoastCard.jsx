@@ -7,15 +7,20 @@ export default function RoastCard() {
 
   useEffect(() => {
     if (!roastText) return;
+    console.log(roastText);
 
+    const chars = Array.from(roastText);
     let i = 0;
     setAnimatedText("");
 
     const interval = setInterval(() => {
-      setAnimatedText((prev) => prev + roastText[i]);
-      i++;
+      if (i >= chars.length) {
+        clearInterval(interval);
+        return;
+      }
 
-      if (i >= roastText.length) clearInterval(interval);
+      setAnimatedText((prev) => prev + (chars[i] ?? ""));
+      i++;
     }, 15);
 
     return () => clearInterval(interval);
@@ -30,7 +35,7 @@ export default function RoastCard() {
 
       <div className="mt-4 w-[700px] mb-20 max-w-full bg-white text-black border-4 border-black rounded-2xl p-6 shadow-[3.5px_3.5px_0px_rgba(0,0,0,1)]">
         <div className="text-base leading-relaxed whitespace-pre-wrap">
-          <ReactMarkdown>{animatedText}</ReactMarkdown>
+          <ReactMarkdown>{roastText[0] + animatedText || ""}</ReactMarkdown>
         </div>
       </div>
     </>

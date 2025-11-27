@@ -90,7 +90,7 @@ export default function ProfileCard() {
           </div>
         </div>
         {!roastText ? (
-          <div className="flex gap-5">
+          <div className="flex gap-5 mb-10">
             <button
               onClick={handleConfirm}
               disabled={loading}

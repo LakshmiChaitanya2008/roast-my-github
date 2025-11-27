@@ -34,13 +34,15 @@ export const roastUser = async function (profileData, repoData) {
 
   // console.log(prompt);
 
-  const res = await fetch("http://localhost:3000/api/roast", {
+  const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/roast`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ profileData, repoData }),
   });
+
+  console.log(res);
   if (res.status !== 500) {
     const data = await res.json();
     console.log(data);
