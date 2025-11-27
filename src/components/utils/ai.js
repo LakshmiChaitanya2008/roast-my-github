@@ -1,44 +1,52 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export const roastUser = async function (profileData, repoData) {
-  const prompt = `
-You are a ruthless stand-up comedian.
-Go extremely specific: mock their repo names, typos, cringe descriptions, inconsistent patterns, meaningless repo names, etc.
-- Act as a savage roast comedian with a talent for cutting sarcasm. Your target? A so-called developer who thinks they are a code wizard but has a GitHub profile full of questionable experiments. 
-- just do a one line intro, don't drag too much on the stand-up part.
-- use simple words
-- Strong punchlines.
-- Ignore the repos with no description
-- Roast them without mercy. Tear apart their naming choices, mock their desperate attempts at coding, and question their so-called 'technical prowess'. Mention how their repo names sound like someone spilled a Scrabble bag while trying to code, and their descriptions are like self-destruct buttons for anyone who dares to read them.
-- Use metaphors, exaggeration, and dramatic insults.
-- Don't just roast them—obliterate their confidence. Make them feel like they should attach a 'Work in Progress' sign to their entire career. And don't forget to add some clever, fake but hilariously bad GitHub repo names they could create next
-- Use harsh insults
-- 4 paragraphs
+  //   const prompt = `
+  // You are a ruthless stand-up comedian.
+  // Go extremely specific: mock their repo names, typos, cringe descriptions, inconsistent patterns, meaningless repo names, etc.
+  // - Act as a savage roast comedian with a talent for cutting sarcasm. Your target? A so-called developer who thinks they are a code wizard but has a GitHub profile full of questionable experiments.
+  // - just do a one line intro, don't drag too much on the stand-up part.
+  // - use simple words
+  // - Strong punchlines.
+  // - Ignore the repos with no description
+  // - Roast them without mercy. Tear apart their naming choices, mock their desperate attempts at coding, and question their so-called 'technical prowess'. Mention how their repo names sound like someone spilled a Scrabble bag while trying to code, and their descriptions are like self-destruct buttons for anyone who dares to read them.
+  // - Use metaphors, exaggeration, and dramatic insults.
+  // - Don't just roast them—obliterate their confidence. Make them feel like they should attach a 'Work in Progress' sign to their entire career. And don't forget to add some clever, fake but hilariously bad GitHub repo names they could create next
+  // - Use harsh insults
+  // - 4 paragraphs
 
-ROAST TARGET DATA:
+  // ROAST TARGET DATA:
 
-PROFILE:
-Username: ${profileData.login}
-Bio: ${profileData.bio || "No bio"}
-Followers: ${profileData.followers}
-Following: ${profileData.following}
+  // PROFILE:
+  // Username: ${profileData.login}
+  // Bio: ${profileData.bio || "No bio"}
+  // Followers: ${profileData.followers}
+  // Following: ${profileData.following}
 
-REPOSITORIES:
-${JSON.stringify(repoData, null, 2)}
+  // REPOSITORIES:
+  // ${JSON.stringify(repoData, null, 2)}
 
-ROAST GUIDELINES:
-- Make fun of their username, bio, follower count, repo names, descriptions.
-- Point out patterns like cringe names, cringe descriptions, most common projects, useless projects.
-- Be spicy.
-`;
+  // ROAST GUIDELINES:
+  // - Make fun of their username, bio, follower count, repo names, descriptions.
+  // - Point out patterns like cringe names, cringe descriptions, most common projects, useless projects.
+  // - Be spicy.
+  // `;
 
-  console.log(prompt);
+  // console.log(prompt);
 
-  const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+  const res = await fetch("http://localhost:3000/api/roast", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ profileData, repoData }),
+  });
+  if (res.status !== 500) {
+    const data = await res.json();
+    console.log(data);
 
-  const result = await model.generateContent(prompt);
-  console.log(result.response.text());
-  return result.response.text();
-  //   return prompt;
+    return data.roast;
+  } else {
+    return "Gemini Server Overloaded! Please Try Again later.";
+  }
 };
