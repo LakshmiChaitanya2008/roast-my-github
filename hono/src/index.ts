@@ -4,6 +4,8 @@ import {
   GoogleGenerativeAIResponseError,
 } from "@google/generative-ai";
 import { cors } from "hono/cors";
+import { rateLimiter } from "hono-rate-limiter";
+import { nanoid } from "nanoid";
 const app = new Hono();
 
 const welcomeStrings = [
@@ -12,6 +14,15 @@ const welcomeStrings = [
 ];
 
 app.use("/api/*", cors());
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000,
+    limit: 5,
+    standardHeaders: "draft-6",
+    keyGenerator: (c) =>
+      c.req.header("x-forwarded-for") || c.req.header("x-real-ip") || "unknown",
+  })
+);
 app.get("/", (c) => {
   return c.text(welcomeStrings.join("\n\n"));
 });

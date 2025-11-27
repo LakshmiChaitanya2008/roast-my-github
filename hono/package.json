@@ -5,7 +5,9 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
-    "hono": "^4.8.9"
+    "hono": "^4.8.9",
+    "hono-rate-limiter": "^0.4.2",
+    "nanoid": "^5.1.6"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",

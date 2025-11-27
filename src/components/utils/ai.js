@@ -43,7 +43,8 @@ export const roastUser = async function (profileData, repoData) {
   });
 
   console.log(res);
-  if (res.status !== 500) {
+
+  if (res.status === 200) {
     const data = await res.json();
     console.log(data);
 
