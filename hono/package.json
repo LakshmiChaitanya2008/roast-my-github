@@ -5,6 +5,7 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "hono": "^4.8.9",
     "hono-rate-limiter": "^0.4.2",
     "nanoid": "^5.1.6"
